@@ -1,8 +1,5 @@
-import ActivationType from "./ActivationType";
-import GradientHolder from "../../../GradientHolder";
+import GradientHolder from "../../GradientHolder";
 import Layer from "../Layer";
-import ReLUPropagation from "../../operations/ReLUPropagation";
-import PropagationOperation from "../../PropagationOperation";
 
 export default abstract class ActivationLayer extends Layer {
   constructor(input: GradientHolder) {
