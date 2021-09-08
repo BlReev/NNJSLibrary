@@ -1,5 +1,6 @@
 import Tensor from "../../Tensor";
 import Utils from "../../utils/Utils";
+import PropagationOperation from "../PropagationOperation";
 import UnaryOperationNeuron from "../UnaryOperationNeuron";
 
 export default class SoftmaxPropagation extends UnaryOperationNeuron {
@@ -31,8 +32,18 @@ export default class SoftmaxPropagation extends UnaryOperationNeuron {
     const input = this.firstOperand;
 
     for (let index = 0; index < this.items.shape[1]; index++) {
-      const indicator = index === y ? 1.0 : 0.0;
+      const indicator = index === correctLabel ? 1.0 : 0.0;
       input.gradv[index] = this.out[index] - indicator;
+    }
+  }
+
+  propagateBackwards(correctLabel: number = 0): void {
+    if (this.firstOperand.grad_required) {
+      this.applyFirstGradient(correctLabel);
+
+      if (this.firstOperand instanceof PropagationOperation) {
+        this.firstOperand.propagateBackwards();
+      }
     }
   }
 }

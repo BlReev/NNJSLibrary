@@ -1,11 +1,7 @@
-import Tensor from "../../Tensor";
-import Assertion from "../../utils/Assertion";
-import Utils from "../../utils/Utils";
-import BackPropagationNode from "../BackPropagationNode";
-import BinaryOperationNeuron from "../BinaryOperationNeuron";
-import GradientHolder from "../../GradientHolder";
-import AddPropagation from "../operations/AddPropagation";
-import MatMulPropagation from "../operations/MatMulPropagation";
+import Assertion from "../utils/Assertion";
+import GradientHolder from "../GradientHolder";
+import AddPropagation from "../backpropagation/operations/AddPropagation";
+import MatMulPropagation from "../backpropagation/operations/MatMulPropagation";
 import Layer from "./Layer";
 
 export default class LinearLayout extends Layer {
