@@ -19,7 +19,7 @@ export default class SoftmaxPropagation extends UnaryOperationNeuron {
       expArray[expIndex] = e;
     }
 
-    for (const index = 0; index < length; index++) {
+    for (let index = 0; index < length; index++) {
       expArray[index] /= expSum;
       tensor.out[index] = expArray[index];
     }
@@ -27,13 +27,12 @@ export default class SoftmaxPropagation extends UnaryOperationNeuron {
     return tensor;
   }
 
-  applyFirstGradient(): void {
+  applyFirstGradient(correctLabel: number = 0): void {
     const input = this.firstOperand;
 
-    for (var index = 0; index < this.items.shape[1]; index++) {
-      var indicator = index === y ? 1.0 : 0.0;
-      var mul = -(indicator - this.out[index]);
-      input.gradv[index] = mul;
+    for (let index = 0; index < this.items.shape[1]; index++) {
+      const indicator = index === y ? 1.0 : 0.0;
+      input.gradv[index] = this.out[index] - indicator;
     }
   }
 }
