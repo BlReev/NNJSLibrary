@@ -79,7 +79,7 @@ export default {
   randi(lowerBound, upperBound) {
     return Math.floor(this.randf(lowerBound, upperBound));
   },
-  // Random number starting with mean, and standard deviation = the randomness strength
+  // Random number starting with mean, and standard deviation = the randomness range
   randn(mean, standardDeviation) {
     return mean + this.gaussRandom() * standardDeviation;
   },
