@@ -18,7 +18,7 @@ export default class MatMulPropagation extends BinaryOperationNeuron {
           const multiplyGradient = this.gradv[cols * row + col];
 
           this.firstOperand.gradv[x * row + dim] +=
-            this.secondOperand.out[cols * dim + col] * multiplyGradient;
+            this.secondOperand.output[cols * dim + col] * multiplyGradient;
         }
       }
     }
@@ -35,7 +35,7 @@ export default class MatMulPropagation extends BinaryOperationNeuron {
           const multiplyGradient = this.gradv[cols * row + col];
 
           this.secondOperand.gradv[cols * dim + col] +=
-            this.firstOperand.out[x * row + dim] * multiplyGradient;
+            this.firstOperand.output[x * row + dim] * multiplyGradient;
         }
       }
     }

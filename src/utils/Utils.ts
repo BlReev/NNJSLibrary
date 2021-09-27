@@ -1,6 +1,5 @@
-import GradientHolder from "../GradientHolder";
-import Tensor from "../Tensor";
-import Assertion from "./Assertion";
+import GradientHolder from '../GradientHolder';
+import Tensor from '../Tensor';
 
 let return_value: boolean = false;
 let value: number = 0.0;
@@ -91,7 +90,7 @@ export default {
   },
   // Multiply two tensor matrices
   matmul(A: GradientHolder, B: GradientHolder): Tensor {
-    const resultRowCount = A.shape[0];
+    /*const resultRowCount = A.shape[0];
     const mustEqualColCount = A.shape[1];
     const mustEqualRowCount = B.shape[0];
     const resultColCount = B.shape[1];
@@ -117,6 +116,7 @@ export default {
       }
     }
 
-    return resultTensor;
+    return resultTensor;*/
+    return null;
   },
 };

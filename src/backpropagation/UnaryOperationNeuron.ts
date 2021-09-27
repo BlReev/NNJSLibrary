@@ -1,4 +1,3 @@
-import Tensor from "../Tensor";
 import GradientHolder from "../GradientHolder";
 import PropagationOperation from "./PropagationOperation";
 
@@ -13,14 +12,14 @@ export default abstract class UnaryOperationNeuron extends PropagationOperation 
     this.firstOperand = operands[0];
   }
 
-  abstract applyFirstGradient(): void;
+  abstract applyFirstGradient(target?: number): void;
 
-  propagateBackwards(): void {
+  propagateBackwards(target?: number): void {
     if (this.firstOperand.grad_required) {
-      this.applyFirstGradient();
+      this.applyFirstGradient(target);
 
       if (this.firstOperand instanceof PropagationOperation) {
-        this.firstOperand.propagateBackwards();
+        this.firstOperand.propagateBackwards(target);
       }
     }
   }

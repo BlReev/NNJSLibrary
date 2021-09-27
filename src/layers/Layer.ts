@@ -1,39 +1,52 @@
-import Tensor from "../../Tensor";
-import GradientHolder from "../../GradientHolder";
-import BackPropagationNode from "../BackPropagationNode";
-import PropagationOperation from "../PropagationOperation";
+import Tensor from "../Tensor";
+import GradientHolder from "../GradientHolder";
+import BackPropagationNode from "../backpropagation/BackPropagationNode";
+import PropagationOperation from "../backpropagation/PropagationOperation";
+import Utils from "../utils/Utils";
+import Assertion from "../utils/Assertion";
 
-export default abstract class Layer
-  extends GradientHolder
-  implements BackPropagationNode
-{
-  items: GradientHolder;
+export default abstract class Layer {
+  input: Layer;
+  inputShape: number[];
+  output: GradientHolder;
+  outputShape: number[];
   W: Tensor;
   b: Tensor;
-  feedCache: number;
 
-  constructor(inputDimension: number, outputDimension: number) {
-    super();
-
-    this.shape = [inputDimension, outputDimension];
-    this.W = new Tensor(inputDimension, outputDimension).fillGaussianRandom(
-      0,
-      0.88
-    );
-    this.b = new Tensor(outputDimension, 1).fillGaussianRandom(0, 0.88);
+  constructor(w: number, h: number, d: number) {
+    this.outputShape = [w, h, d];
+    this.inputShape = [w, h, d];
+    this.output = new Tensor(w, h, d);
+    this.W = new Tensor(w, h, d).fillGaussianRandom(0, 0.88);
+    this.b = new Tensor(1, 1, d).fillGaussianRandom(0, 0.88);
   }
 
-  forwardPass(): GradientHolder {
-    return this.items;
-  }
+  propagateBackwards(target?: number): void {
+    if (this.input instanceof Layer) {
+      this.input.output.grad(this.output.gradv);
 
-  propagateBackwards(): void {
-    this.items.grad(this.gradv);
-
-    if (this.items instanceof PropagationOperation) {
-      this.items.propagateBackwards();
+      if (this.input instanceof PropagationOperation) {
+        this.input.propagateBackwards(target);
+      }
     }
   }
 
-  abstract feedForward(inputs: GradientHolder): Layer;
+  feedForward(input: Layer): Layer {
+    Assertion.assert(
+      Utils.shapeEquals(this.inputShape, input.outputShape),
+      `Input Shape must match the layer's input shape!\n  Shapes:\n  Input: ${input.outputShape}\n  Layer: ${this.inputShape}`
+    );
+
+    this.input = input;
+
+    return this;
+  }
+
+  get(row: number, col: number, depth: number) {
+    return this.output.get(row, col, depth);
+  }
+
+  set(row: number, col: number, depth: number, value: number) {
+    this.output.set(row, col, depth, value);
+  }
 }

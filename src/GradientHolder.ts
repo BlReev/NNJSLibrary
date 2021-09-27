@@ -1,20 +1,28 @@
 export default abstract class GradientHolder {
-  out: number[];
+  output: number[];
   shape: number[];
   gradv: number[];
   grad_required: boolean;
 
-  get(row: number, col: number) {
-    return this.out[this.shape[1] * row + col];
+  get(row: number, col: number, depth: number) {
+    return this.output[(this.shape[1] * row + col) * this.shape[2] + depth];
   }
 
-  set(row: number, col: number, value: number) {
-    this.out[this.shape[1] * row + col] = value;
+  set(row: number, col: number, depth: number, value: number) {
+    this.output[(this.shape[1] * row + col) * this.shape[2] + depth] = value;
   }
 
-  setOut(out: number[]) {
-    for (let i = 0, n = out.length; i < n; i++) {
-      this.out[i] = out[i];
+  getGrad(row: number, col: number, depth: number) {
+    return this.gradv[(this.shape[1] * row + col) * this.shape[2] + depth];
+  }
+
+  setGrad(row: number, col: number, depth: number, value: number) {
+    this.gradv[(this.shape[1] * row + col) * this.shape[2] + depth] = value;
+  }
+
+  setOutput(output: number[]) {
+    for (let i = 0, n = output.length; i < n; i++) {
+      this.output[i] = output[i];
     }
   }
 

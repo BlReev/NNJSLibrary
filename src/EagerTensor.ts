@@ -1,15 +1,16 @@
-import Tensor from "./Tensor";
+import Tensor from './Tensor';
 
 export default class EagerTensor extends Tensor {
   constructor(
-    n: number,
+    w: number,
+    h: number,
     d: number,
     inputs: number[],
     grad_required: boolean = true
   ) {
-    super(n, d, grad_required);
+    super(w, h, d, grad_required);
 
-    Object.defineProperty(this, "out", {
+    Object.defineProperty(this, 'out', {
       value: inputs,
       writable: false,
       enumerable: true,

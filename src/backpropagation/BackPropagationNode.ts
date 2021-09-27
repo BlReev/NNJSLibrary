@@ -1,8 +1,8 @@
-import GradientHolder from "../GradientHolder";
+import GradientHolder from '../GradientHolder';
 
 export default interface BackPropagationNode extends GradientHolder {
-  items: GradientHolder;
+  input: GradientHolder;
 
   forwardPass(): GradientHolder;
-  propagateBackwards(): void;
+  propagateBackwards(target?: number): void;
 }

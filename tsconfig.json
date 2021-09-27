@@ -3,6 +3,15 @@
       "target": "es6",
       "module": "commonjs",
       "sourceMap": true,
-      "outDir": "out/"
-    }
+      "outDir" : "./dist/",
+      "baseUrl" : "./src",
+      "alwaysStrict" : true,
+      "removeComments": true,
+    },
+    "include": [
+        "./**/*.ts"
+    ],
+    "exclude": [
+        "./dist/out.d.ts"
+    ] 
   }
