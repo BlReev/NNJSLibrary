@@ -12,6 +12,8 @@ export default class SoftmaxLayer extends ActivationLayer {
 
     this.input = inputs;
 
+    // console.log(this.input);
+
     const length = this.outputShape[2];
     const tensor: Tensor = new Tensor(1, 1, length, true);
     const activation = inputs.output.output;

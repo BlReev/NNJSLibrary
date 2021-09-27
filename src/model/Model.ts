@@ -71,6 +71,7 @@ export default abstract class Model {
 
   optimize() {
     this.optimizer.optimize();
+    this.optimizer.reset();
   }
 
   train(inputs: GradientHolder, target: number): number[] {

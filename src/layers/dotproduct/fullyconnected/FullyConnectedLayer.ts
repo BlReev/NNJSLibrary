@@ -6,7 +6,13 @@ import Layer from "../../Layer";
 export default class FullyConnectedLayer extends OptimizableLayer {
   filters: Tensor[];
 
-  constructor(w, h, d, neuronCount, bias: number = 0) {
+  constructor(
+    w: number,
+    h: number,
+    d: number,
+    neuronCount: number,
+    bias: number = 0
+  ) {
     super(1, 1, neuronCount);
 
     this.inputShape = [w, h, d];
@@ -31,7 +37,7 @@ export default class FullyConnectedLayer extends OptimizableLayer {
         weight += weights[weightIndex] * filterWeights[weightIndex];
       }
       weight += this.b.output[i];
-      this.output[i] = weight;
+      this.output.output[i] = weight;
     }
 
     return this;
@@ -39,6 +45,8 @@ export default class FullyConnectedLayer extends OptimizableLayer {
 
   propagateBackwards() {
     const input: Layer = this.input;
+    const inputCount =
+      this.inputShape[0] * this.inputShape[1] * this.inputShape[2];
     input.W.gradv = Utils.buildOneDimensionalArray(input.W.output.length);
 
     for (
@@ -47,11 +55,10 @@ export default class FullyConnectedLayer extends OptimizableLayer {
       currentDepth++
     ) {
       const filter: Tensor = this.filters[currentDepth];
-      const chainedGradient = this.input.W.gradv[currentDepth];
-
-      for (var index = 0; index < this.inputShape[0]; index++) {
+      const chainedGradient = this.output.gradv[currentDepth];
+      for (var index = 0; index < inputCount; index++) {
         input.W.gradv[index] += filter.output[index] * chainedGradient;
-        filter.gradv[index] += input.output[index] * chainedGradient;
+        filter.gradv[index] += input.output.output[index] * chainedGradient;
       }
 
       this.b.gradv[currentDepth] += chainedGradient;
@@ -62,6 +69,8 @@ export default class FullyConnectedLayer extends OptimizableLayer {
     super.optimize(learningRate);
 
     for (const filter of this.filters) {
+      // console.log("filter gradients");
+      // console.table(filter.gradv);
       for (let index = 0; index < filter.gradv.length; index++) {
         filter.output[index] -= learningRate * filter.gradv[index];
       }
