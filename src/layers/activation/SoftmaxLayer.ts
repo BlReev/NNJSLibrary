@@ -12,10 +12,7 @@ export default class SoftmaxLayer extends ActivationLayer {
 
     this.input = inputs;
 
-    // console.log(this.input);
-
     const length = this.outputShape[2];
-    const tensor: Tensor = new Tensor(1, 1, length, true);
     const activation = inputs.output.output;
     const activationMax = Math.max(...activation);
 
@@ -30,7 +27,7 @@ export default class SoftmaxLayer extends ActivationLayer {
 
     for (let index = 0; index < length; index++) {
       expArray[index] /= expSum;
-      tensor.output[index] = expArray[index];
+      this.output.output[index] = expArray[index];
     }
 
     this.exponents = expArray;

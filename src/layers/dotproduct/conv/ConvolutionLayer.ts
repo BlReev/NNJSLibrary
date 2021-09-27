@@ -1,3 +1,4 @@
+import GradientHolder from "GradientHolder";
 import Tensor from "../../../Tensor";
 import Assertion from "../../../utils/Assertion";
 import Utils from "../../../utils/Utils";
@@ -174,7 +175,14 @@ export default class ConvolutionLayer extends OptimizableLayer {
     }
   }
 
-  optimize(learningRate: number): void {
+  getTrainableVariables() : GradientHolder[] {
+    return [
+      ...super.getTrainableVariables(),
+      ...this.filters
+    ]
+  }
+
+  /*optimize(learningRate: number): void {
     super.optimize(learningRate);
 
     for (const filter of this.filters) {
@@ -183,5 +191,5 @@ export default class ConvolutionLayer extends OptimizableLayer {
         // console.log("filter after", filter);
       }
     }
-  }
+  }*/
 }

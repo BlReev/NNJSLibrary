@@ -7,6 +7,9 @@ import OptimizerType from "../optimizer/OptimizerType";
 import SGD from "../optimizer/SGD";
 import SoftmaxLayer from "../layers/activation/SoftmaxLayer";
 import InputLayer from "../layers/input/InputLayer";
+import OptimizableLayer from "layers/OptimizableLayer";
+
+interface OptimizeResult {}
 
 export default abstract class Model {
   layers: Layer[];
@@ -69,9 +72,29 @@ export default abstract class Model {
     return loss;
   }
 
-  optimize() {
-    this.optimizer.optimize();
-    this.optimizer.reset();
+  optimize(): OptimizeResult {
+    //this.optimizer.optimize();
+    //this.optimizer.reset();
+    const trainableVariables = this.getTrainableVariables();
+
+    for (const trainableVariable of trainableVariables) {
+      this.optimizer.optimize(trainableVariable);
+      this.optimizer.reset(trainableVariable);
+    }
+
+    return {};
+  }
+
+  getTrainableVariables(): GradientHolder[] {
+    const trainableVariables: GradientHolder[] = [];
+
+    for (const layer of this.layers) {
+      if (layer instanceof OptimizableLayer) {
+        trainableVariables.push(...layer.getTrainableVariables());
+      }
+    }
+
+    return trainableVariables;
   }
 
   train(inputs: GradientHolder, target: number): number[] {

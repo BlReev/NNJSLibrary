@@ -2,7 +2,6 @@ export default abstract class GradientHolder {
   output: number[];
   shape: number[];
   gradv: number[];
-  grad_required: boolean;
 
   get(row: number, col: number, depth: number) {
     return this.output[(this.shape[1] * row + col) * this.shape[2] + depth];

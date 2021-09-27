@@ -1,4 +1,3 @@
-import GradientHolder from "../../GradientHolder";
 import Layer from "../Layer";
 import ActivationLayer from "./ActivationLayer";
 import Utils from "../../utils/Utils";
@@ -30,8 +29,8 @@ export default class ReLULayer extends ActivationLayer {
     inputs.W.gradv = Utils.buildOneDimensionalArray(outputLength, () => 0);
 
     for (var i = 0; i < outputLength; i++) {
-      if (inputs.output[i] <= 0) this.W.gradv[i] = 0;
-      else this.W.gradv[i] = inputs.W.gradv[i];
+      if (this.output[i] <= 0) inputs.W.gradv[i] = 0;
+      else inputs.W.gradv[i] = this.W.gradv[i];
     }
   }
 }

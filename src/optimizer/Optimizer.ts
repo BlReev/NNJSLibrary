@@ -1,4 +1,7 @@
-import Model from '../model/Model';
+import GradientHolder from "GradientHolder";
+import OptimizableLayer from "layers/OptimizableLayer";
+import Utils from "utils/Utils";
+import Model from "../model/Model";
 export default abstract class Optimizer {
   model: Model;
   learningRate: number;
@@ -8,7 +11,11 @@ export default abstract class Optimizer {
     this.learningRate = learningRate;
   }
 
-  abstract optimize(): void;
+  abstract optimize(trainableVariable: GradientHolder): void;
 
-  abstract reset(): void;
+  reset(trainableVariable: GradientHolder): void {
+    trainableVariable.grad(
+      Utils.buildOneDimensionalArray(trainableVariable.gradv.length, () => 0)
+    );
+  }
 }

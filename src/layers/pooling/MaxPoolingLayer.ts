@@ -109,7 +109,6 @@ export default class MaxPoolingLayer extends OptimizableLayer {
       inputs.W.output.length,
       () => 0
     );
-    let output = this.output;
 
     let switchIndex = 0;
     for (

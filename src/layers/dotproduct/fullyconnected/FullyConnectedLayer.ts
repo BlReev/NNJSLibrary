@@ -2,6 +2,7 @@ import Utils from "../../../utils/Utils";
 import OptimizableLayer from "../../OptimizableLayer";
 import Tensor from "../../../Tensor";
 import Layer from "../../Layer";
+import GradientHolder from "GradientHolder";
 
 export default class FullyConnectedLayer extends OptimizableLayer {
   filters: Tensor[];
@@ -26,7 +27,7 @@ export default class FullyConnectedLayer extends OptimizableLayer {
   feedForward(inputs: Layer): Layer {
     super.feedForward(inputs);
 
-    const weights = inputs.output;
+    const weights = inputs.output.output;
     const inputCount =
       this.inputShape[0] * this.inputShape[1] * this.inputShape[2];
 
@@ -55,7 +56,7 @@ export default class FullyConnectedLayer extends OptimizableLayer {
       currentDepth++
     ) {
       const filter: Tensor = this.filters[currentDepth];
-      const chainedGradient = this.output.gradv[currentDepth];
+      const chainedGradient = this.W.gradv[currentDepth];
       for (var index = 0; index < inputCount; index++) {
         input.W.gradv[index] += filter.output[index] * chainedGradient;
         filter.gradv[index] += input.output.output[index] * chainedGradient;
@@ -65,15 +66,20 @@ export default class FullyConnectedLayer extends OptimizableLayer {
     }
   }
 
-  optimize(learningRate: number): void {
+  getTrainableVariables() : GradientHolder[] {
+    return [
+      ...super.getTrainableVariables(),
+      ...this.filters
+    ]
+  }
+
+  /*optimize(learningRate: number): void {
     super.optimize(learningRate);
 
     for (const filter of this.filters) {
-      // console.log("filter gradients");
-      // console.table(filter.gradv);
       for (let index = 0; index < filter.gradv.length; index++) {
         filter.output[index] -= learningRate * filter.gradv[index];
       }
     }
-  }
+  }*/
 }
