@@ -92,7 +92,7 @@ export default class MaxPoolingLayer extends Layer {
           this.switchX[switchCounter] = maxX;
           this.switchY[switchCounter] = maxY;
           switchCounter++;
-          this.output.set(outputY, outputX, currentDepth, max);
+          this.output.set(outputX, outputY, currentDepth, max);
         }
       }
     }

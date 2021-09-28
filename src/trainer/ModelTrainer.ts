@@ -69,7 +69,7 @@ export default class ModelTrainer {
 
           Assertion.assert(
             inputTensor.output.length === numInputs,
-            `Input Shape Must Equal Model's Input Shape\nShape Expected: ${inputShape}`
+            `Input Shape Must Equal Model's Input Shape\n  Input Index: ${inputIndex}\n  Shape Expected: ${inputShape}`
           );
 
           tensorInputs[inputIndex] = inputTensor;
@@ -77,7 +77,7 @@ export default class ModelTrainer {
         } else {
           Assertion.assert(
             Utils.shapeEquals(input.shape, inputShape),
-            `Input Shape Must Equal Model's Input Shape\nShape Expected: ${inputShape}`
+            `Input Shape Must Equal Model's Input Shape\n  Input Index: ${inputIndex}\n  Shape Expected: ${inputShape}`
           );
 
           tensorInputs[inputIndex] = input;

@@ -37,11 +37,11 @@ export default abstract class Layer {
     return this;
   }
 
-  get(row: number, col: number, depth: number) {
-    return this.output.get(row, col, depth);
+  get(x: number, y: number, d: number) {
+    return this.output.get(x, y, d);
   }
 
-  set(row: number, col: number, depth: number, value: number) {
-    this.output.set(row, col, depth, value);
+  set(x: number, y: number, d: number, value: number) {
+    this.output.set(x, y, d, value);
   }
 }

@@ -49,14 +49,15 @@ export default class ConvolutionLayer extends OptimizableLayer {
 
     for (let filterIndex = 0; filterIndex < this.filterCount; ++filterIndex) {
       const filter: Tensor = this.filters[filterIndex];
-      let x: number = this.padding;
-      let y: number = this.padding;
+      let x: number = -this.padding;
+      let y: number = -this.padding;
 
       for (
         let outputY = 0;
         outputY < this.outputShape[1];
         y += stride, ++outputY
       ) {
+        x = -this.padding;
         for (
           let outputX = 0;
           outputX < this.outputShape[0];
@@ -87,7 +88,7 @@ export default class ConvolutionLayer extends OptimizableLayer {
                       (filter.shape[0] * filterY + filterX) * filter.shape[2] +
                         filterDepth
                     ] *
-                    inputs.output[
+                    inputs.output.output[
                       (inputs.outputShape[0] * inputY + inputX) *
                         inputs.outputShape[2] +
                         filterDepth
@@ -98,10 +99,17 @@ export default class ConvolutionLayer extends OptimizableLayer {
           }
 
           accumulator += this.b.output[filterIndex];
-          this.set(outputY, outputX, filterIndex, accumulator);
+          this.set(outputX, outputY, filterIndex, accumulator);
         }
       }
     }
+
+    console.log(
+      [...this.filters].map((_, i) => [
+        i,
+        ...[..._.gradv].map((n, i) => (n ? i : false)).filter((v, i) => v),
+      ])
+    );
 
     return this;
   }
@@ -138,11 +146,11 @@ export default class ConvolutionLayer extends OptimizableLayer {
           outputX < this.outputShape[0];
           x += stride, outputX++
         ) {
-          const chain_grad = this.W.getGrad(outputX, outputY, filterIndex);
+          const chainedGrad = this.W.getGrad(outputX, outputY, filterIndex);
           for (let filterY = 0; filterY < filter.shape[1]; filterY++) {
-            let inputY = y + filterY;
+            const inputY = y + filterY;
             for (var filterX = 0; filterX < filter.shape[0]; filterX++) {
-              let inputX = x + filterX;
+              const inputX = x + filterX;
               if (
                 inputY >= 0 &&
                 inputY < inputsH &&
@@ -152,7 +160,7 @@ export default class ConvolutionLayer extends OptimizableLayer {
                 for (
                   let filterDepth = 0;
                   filterDepth < filter.shape[2];
-                  filterDepth++
+                  ++filterDepth
                 ) {
                   const inputIndex =
                     (inputsW * inputY + inputX) * inputs.outputShape[2] +
@@ -162,14 +170,14 @@ export default class ConvolutionLayer extends OptimizableLayer {
                     filterDepth;
 
                   filter.gradv[filterIndex] +=
-                    inputs.output.output[inputIndex] * chain_grad;
+                    inputs.output.output[inputIndex] * chainedGrad;
                   inputs.W.gradv[inputIndex] +=
-                    filter.output[filterIndex] * chain_grad;
+                    filter.output[filterIndex] * chainedGrad;
                 }
               }
             }
           }
-          this.b.gradv[filterIndex] += chain_grad;
+          this.b.gradv[filterIndex] += chainedGrad;
         }
       }
     }

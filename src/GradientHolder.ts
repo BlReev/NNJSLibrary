@@ -3,24 +3,28 @@ export default abstract class GradientHolder {
   shape: number[];
   gradv: number[];
 
-  get(row: number, col: number, depth: number) {
-    return this.output[(this.shape[1] * row + col) * this.shape[2] + depth];
+  private ind(x: number, y: number, d: number) {
+    return (this.shape[0] * y + x) * this.shape[2] + d;
   }
 
-  set(row: number, col: number, depth: number, value: number) {
-    this.output[(this.shape[1] * row + col) * this.shape[2] + depth] = value;
+  get(x: number, y: number, d: number) {
+    return this.output[this.ind(x, y, d)];
   }
 
-  getGrad(row: number, col: number, depth: number) {
-    return this.gradv[(this.shape[1] * row + col) * this.shape[2] + depth];
+  set(x: number, y: number, d: number, value: number) {
+    this.output[this.ind(x, y, d)] = value;
   }
 
-  setGrad(row: number, col: number, depth: number, value: number) {
-    this.gradv[(this.shape[1] * row + col) * this.shape[2] + depth] = value;
+  getGrad(x: number, y: number, d: number) {
+    return this.gradv[this.ind(x, y, d)];
   }
 
-  addGrad(row: number, col: number, depth: number, value: number) {
-    this.gradv[(this.shape[1] * row + col) * this.shape[2] + depth] += value;
+  setGrad(x: number, y: number, d: number, value: number) {
+    this.gradv[this.ind(x, y, d)] = value;
+  }
+
+  addGrad(x: number, y: number, d: number, value: number) {
+    this.gradv[this.ind(x, y, d)] += value;
   }
 
   setOutput(output: number[]) {

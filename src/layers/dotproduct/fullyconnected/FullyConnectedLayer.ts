@@ -19,7 +19,7 @@ export default class FullyConnectedLayer extends OptimizableLayer {
     this.inputShape = [w, h, d];
     this.filters = [];
 
-    for (var filterIndex = 0; filterIndex < d; filterIndex++) {
+    for (var filterIndex = 0; filterIndex < neuronCount; filterIndex++) {
       this.filters.push(new Tensor(1, 1, w * h * d));
     }
 
