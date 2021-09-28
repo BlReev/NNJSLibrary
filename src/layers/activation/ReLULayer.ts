@@ -26,11 +26,10 @@ export default class ReLULayer extends ActivationLayer {
   propagateBackwards(): void {
     const inputs: Layer = this.input;
     const outputLength = inputs.W.output.length;
-    inputs.W.gradv = Utils.buildOneDimensionalArray(outputLength, () => 0);
 
-    for (var i = 0; i < outputLength; i++) {
-      if (this.output[i] <= 0) inputs.W.gradv[i] = 0;
-      else inputs.W.gradv[i] = this.W.gradv[i];
+    for (var index = 0; index < outputLength; index++) {
+      if (this.output[index] <= 0) inputs.W.gradv[index] = 0;
+      else inputs.W.gradv[index] = this.W.gradv[index];
     }
   }
 }

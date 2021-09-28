@@ -1,12 +1,12 @@
-const fs = require('fs');
-const { model } = require('./ClassifierModel.js');
-const { default: Tensor } = require('./Tensor.js');
+const fs = require("fs");
+const { model } = require("./ClassifierModel.js");
+const { default: Tensor } = require("./Tensor.js");
+const { default: ModelTrainer } = require("./trainer/ModelTrainer.js");
 
-var dataFileBuffer = fs.readFileSync(__dirname + '/train-images-idx3-ubyte.gz');
-var labelFileBuffer = fs.readFileSync(
-  __dirname + '/train-labels-idx1-ubyte.gz'
-);
-const pixelValues = [];
+var dataFileBuffer = fs.readFileSync(__dirname + "/train-images-idx3-ubyte");
+var labelFileBuffer = fs.readFileSync(__dirname + "/train-labels-idx1-ubyte");
+const inputs = [];
+const labels = [];
 
 for (let image = 0; image <= 59999; image++) {
   let pixels = [];
@@ -17,18 +17,15 @@ for (let image = 0; image <= 59999; image++) {
     }
   }
 
-  let imageData = {};
-  imageData[JSON.stringify(labelFileBuffer[image + 8])] = pixels;
-
-  pixelValues.push(imageData);
+  labels[image] = labelFileBuffer[image + 8];
+  inputs[image] = pixels;
 }
 
-for (const imageData of pixelValues) {
-  for (const label in imageData) {
-    const inputs = new Tensor(28, 28, 1);
-    inputs.out = imageData[label];
-    model.train(inputs, label);
-  }
+const epochs = 1;
+const trainer = new ModelTrainer(model, model.learningRate, 20);
+
+for (let epoch = 1; epoch <= epochs; ++epoch) {
+  trainer.trainEpoch(inputs, labels);
 }
 
 // TODO: Accept user input

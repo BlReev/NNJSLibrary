@@ -1,5 +1,4 @@
 import Sequential from "./model/Sequential";
-import OptimizerType from "./optimizer/OptimizerType";
 import LossType from "./loss/LossType";
 import InputLayer from "./layers/input/InputLayer";
 import ConvolutionLayer from "./layers/dotproduct/conv/ConvolutionLayer";
@@ -7,8 +6,9 @@ import ReLULayer from "./layers/activation/ReLULayer";
 import MaxPoolingLayer from "./layers/pooling/MaxPoolingLayer";
 import FullyConnectedLayer from "./layers/dotproduct/fullyconnected/FullyConnectedLayer";
 import SoftmaxLayer from "./layers/activation/SoftmaxLayer";
+import Adadelta from "./optimizer/Adadelta";
 
-const learningRate = 0.01;
+const learningRate = 1.0;
 
 // Create and compile the model
 export const model = new Sequential(
@@ -24,7 +24,7 @@ export const model = new Sequential(
     new SoftmaxLayer(1, 1, 10),
   ],
   {
-    optimizer: OptimizerType.SGD,
+    optimizer: new Adadelta(learningRate),
     loss: LossType.CrossEntropy,
     learningRate,
   }

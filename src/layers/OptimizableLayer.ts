@@ -1,4 +1,4 @@
-import GradientHolder from "GradientHolder";
+import GradientHolder from "../GradientHolder";
 import Layer from "./Layer";
 
 export default abstract class OptimizableLayer extends Layer {

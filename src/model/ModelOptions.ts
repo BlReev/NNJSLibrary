@@ -1,7 +1,7 @@
-import LossType from '../loss/LossType';
+import Optimizer from "../optimizer/Optimizer";
 
 export default interface ModelOptions {
-  optimizer?: string;
+  optimizer?: string | Optimizer;
   loss?: string;
   learningRate: number;
 }

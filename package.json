@@ -1,0 +1,24 @@
+{
+  "name": "NNJSLibrary",
+  "version": "1.0.0",
+  "description": "",
+  "main": "Main.js",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^16.10.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BlReev/NNJSLibrary.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BlReev/NNJSLibrary/issues"
+  },
+  "homepage": "https://github.com/BlReev/NNJSLibrary#readme"
+}

@@ -2,10 +2,8 @@ import GradientHolder from "../../GradientHolder";
 import Layer from "../Layer";
 import Tensor from "../../Tensor";
 import Utils from "../../utils/Utils";
-import OptimizableLayer from "../OptimizableLayer";
-import Assertion from "../../utils/Assertion";
 
-export default class MaxPoolingLayer extends OptimizableLayer {
+export default class MaxPoolingLayer extends Layer {
   filterShape: number[];
   padding: number;
   stride: number;
@@ -105,7 +103,7 @@ export default class MaxPoolingLayer extends OptimizableLayer {
   propagateBackwards(): void {
     const inputs: Layer = this.input;
 
-    inputs.output.gradv = Utils.buildOneDimensionalArray(
+    inputs.W.gradv = Utils.buildOneDimensionalArray(
       inputs.W.output.length,
       () => 0
     );
@@ -129,8 +127,8 @@ export default class MaxPoolingLayer extends OptimizableLayer {
           outputY < this.outputShape[1];
           y += this.stride, outputY++
         ) {
-          let chain_grad = this.W.getGrad(outputX, outputY, currentDepth);
-          inputs.W.setGrad(
+          const chain_grad = this.W.getGrad(outputX, outputY, currentDepth);
+          inputs.W.addGrad(
             this.switchY[switchIndex],
             this.switchX[switchIndex],
             currentDepth,

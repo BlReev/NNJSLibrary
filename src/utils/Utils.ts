@@ -1,5 +1,5 @@
-import GradientHolder from '../GradientHolder';
-import Tensor from '../Tensor';
+import GradientHolder from "../GradientHolder";
+import Tensor from "../Tensor";
 
 let return_value: boolean = false;
 let value: number = 0.0;
@@ -86,6 +86,29 @@ export default {
   randnArray(w, mean, standardDeviation) {
     for (let i = 0, n = w.length; i < n; i++) {
       w[i] = this.randn(mean, standardDeviation);
+    }
+  },
+  timeString(millis: number): string {
+    if (millis < 1000) {
+      return `${millis}ms`;
+    } else {
+      let secs = Math.floor(millis / 1000);
+
+      if (secs < 60) {
+        return `${secs}s`;
+      } else {
+        let mins = Math.floor(secs / 60);
+        secs -= mins * 60;
+
+        if (mins < 60) {
+          return `${mins}m ${secs}s`;
+        } else {
+          const hours = Math.floor(mins / 60);
+          mins -= hours * 60;
+
+          return `${hours}h ${mins}m ${secs}s`;
+        }
+      }
     }
   },
   // Multiply two tensor matrices

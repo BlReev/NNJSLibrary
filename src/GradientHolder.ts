@@ -19,6 +19,10 @@ export default abstract class GradientHolder {
     this.gradv[(this.shape[1] * row + col) * this.shape[2] + depth] = value;
   }
 
+  addGrad(row: number, col: number, depth: number, value: number) {
+    this.gradv[(this.shape[1] * row + col) * this.shape[2] + depth] += value;
+  }
+
   setOutput(output: number[]) {
     for (let i = 0, n = output.length; i < n; i++) {
       this.output[i] = output[i];

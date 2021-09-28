@@ -1,17 +1,18 @@
 import GradientHolder from "GradientHolder";
-import OptimizableLayer from "layers/OptimizableLayer";
-import Utils from "utils/Utils";
+import Utils from "../utils/Utils";
 import Model from "../model/Model";
 export default abstract class Optimizer {
-  model: Model;
   learningRate: number;
 
-  constructor(model: Model, learningRate: number) {
-    this.model = model;
+  constructor(learningRate: number) {
     this.learningRate = learningRate;
   }
 
-  abstract optimize(trainableVariable: GradientHolder): void;
+  abstract optimize(
+    trainableVariable: GradientHolder,
+    batchSize: number,
+    index?: number
+  ): void;
 
   reset(trainableVariable: GradientHolder): void {
     trainableVariable.grad(

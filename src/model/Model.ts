@@ -7,7 +7,7 @@ import OptimizerType from "../optimizer/OptimizerType";
 import SGD from "../optimizer/SGD";
 import SoftmaxLayer from "../layers/activation/SoftmaxLayer";
 import InputLayer from "../layers/input/InputLayer";
-import OptimizableLayer from "layers/OptimizableLayer";
+import OptimizableLayer from "../layers/OptimizableLayer";
 
 interface OptimizeResult {}
 
@@ -15,6 +15,8 @@ export default abstract class Model {
   layers: Layer[];
   optimizer: Optimizer;
   loss: string;
+  inputShape: number[];
+  outputShape: number[];
   out: Layer;
 
   constructor(layers: Layer[], modelOptions: ModelOptions = null) {
@@ -26,13 +28,17 @@ export default abstract class Model {
   }
 
   compile(options: ModelOptions) {
-    switch (options.optimizer) {
-      case OptimizerType.SGD:
-        this.optimizer = new SGD(this, options.learningRate);
-        break;
-      default:
-        this.optimizer = null;
-        break;
+    if (options.optimizer instanceof Optimizer) {
+      this.optimizer = options.optimizer;
+    } else {
+      switch (options.optimizer) {
+        case OptimizerType.SGD:
+          this.optimizer = new SGD(options.learningRate);
+          break;
+        default:
+          this.optimizer = null;
+          break;
+      }
     }
     this.loss = options.loss;
 
@@ -46,6 +52,9 @@ export default abstract class Model {
         )
       );
     }
+
+    this.inputShape = this.layers[0].inputShape;
+    this.outputShape = this.layers[this.layers.length - 1].outputShape;
   }
 
   abstract forward(input: GradientHolder): void;
@@ -72,14 +81,12 @@ export default abstract class Model {
     return loss;
   }
 
-  optimize(): OptimizeResult {
-    //this.optimizer.optimize();
-    //this.optimizer.reset();
+  optimize(batchSize: number = 1): OptimizeResult {
     const trainableVariables = this.getTrainableVariables();
 
-    for (const trainableVariable of trainableVariables) {
-      this.optimizer.optimize(trainableVariable);
-      this.optimizer.reset(trainableVariable);
+    for (let index = 0; index < trainableVariables.length; ++index) {
+      this.optimizer.optimize(trainableVariables[index], batchSize, index);
+      this.optimizer.reset(trainableVariables[index]);
     }
 
     return {};
@@ -109,5 +116,23 @@ export default abstract class Model {
     this.forward(inputs);
 
     return this.out.output;
+  }
+
+  getPrediction() {
+    var lossLayer = this.layers[this.layers.length - 1];
+    var predictionArray = lossLayer.output.output;
+    var maxValue = predictionArray[0];
+    var maxIndex = 0;
+    for (
+      var predictionIndex = 1;
+      predictionIndex < predictionArray.length;
+      predictionIndex++
+    ) {
+      if (predictionArray[predictionIndex] > maxValue) {
+        maxValue = predictionArray[predictionIndex];
+        maxIndex = predictionIndex;
+      }
+    }
+    return maxIndex;
   }
 }

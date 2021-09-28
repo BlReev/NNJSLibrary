@@ -175,21 +175,7 @@ export default class ConvolutionLayer extends OptimizableLayer {
     }
   }
 
-  getTrainableVariables() : GradientHolder[] {
-    return [
-      ...super.getTrainableVariables(),
-      ...this.filters
-    ]
+  getTrainableVariables(): GradientHolder[] {
+    return [...this.filters, this.b];
   }
-
-  /*optimize(learningRate: number): void {
-    super.optimize(learningRate);
-
-    for (const filter of this.filters) {
-      for (let index = 0; index < filter.gradv.length; index++) {
-        filter.output[index] -= learningRate * filter.gradv[index];
-        // console.log("filter after", filter);
-      }
-    }
-  }*/
 }

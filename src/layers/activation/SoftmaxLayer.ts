@@ -30,6 +30,8 @@ export default class SoftmaxLayer extends ActivationLayer {
       this.output.output[index] = expArray[index];
     }
 
+    // this.output.output = this.input.output.output;
+
     this.exponents = expArray;
     return this;
   }

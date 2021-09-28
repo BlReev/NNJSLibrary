@@ -1,7 +1,5 @@
 import Tensor from "../Tensor";
 import GradientHolder from "../GradientHolder";
-import BackPropagationNode from "../backpropagation/BackPropagationNode";
-import PropagationOperation from "../backpropagation/PropagationOperation";
 import Utils from "../utils/Utils";
 import Assertion from "../utils/Assertion";
 
@@ -24,10 +22,7 @@ export default abstract class Layer {
   propagateBackwards(target?: number): void {
     if (this.input instanceof Layer) {
       this.input.output.grad(this.output.gradv);
-
-      if (this.input instanceof PropagationOperation) {
-        this.input.propagateBackwards(target);
-      }
+      this.input.propagateBackwards(target);
     }
   }
 
